@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "shishakai"
-version = "0.1.0-alpha.0"
+version = "0.1.0"
 description = "Gather schedules for movie preview events"
 authors = ["Takahiro Yano <speg03@gmail.com>"]
 license = "MIT"
