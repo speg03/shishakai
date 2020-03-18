@@ -1,3 +1,5 @@
+from .moviewalker import MovieWalker  # noqa: F401
+
 try:
     from importlib.metadata import version
 except ImportError:
