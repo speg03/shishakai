@@ -1,29 +1,28 @@
 from urllib.parse import urljoin
-from urllib.request import urlopen
 
 from bs4 import BeautifulSoup
 
+from .base import Site
 
-class MovieWalker:
+
+class MovieWalker(Site):
     def __init__(self):
-        self.base_url = "https://movie.walkerplus.com/shisyakai/"
+        super().__init__("https://movie.walkerplus.com/shisyakai/")
 
-    def events(self):
-        html = urlopen(self.base_url).read()
+    def parse_page(self, html):
         bs = BeautifulSoup(html, "html.parser")
-        return [
-            self._parse_item(item)
-            for item in bs.find_all("div", class_="previewMovieInfo")
-        ]
-
-    def _parse_item(self, item):
-        title = item.a.string
-        url = urljoin(self.base_url, item.a["href"])
-        table_values = item.table.find_all("td")
-        return {
-            "title": title,
-            "url": url,
-            "deadline": table_values[0].string,
-            "date_and_time": table_values[1].string,
-            "venue": table_values[2].string,
-        }
+        events = []
+        for element in bs.find_all("div", class_="previewMovieInfo"):
+            title = element.a.string
+            url = urljoin(self.url, element.a["href"])
+            table_values = element.table.find_all("td")
+            events.append(
+                {
+                    "title": title,
+                    "url": url,
+                    "deadline": table_values[0].string,
+                    "date_and_time": table_values[1].string,
+                    "venue": table_values[2].string,
+                }
+            )
+        return events
